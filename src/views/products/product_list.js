@@ -94,7 +94,7 @@ const ProductList = () => {
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Assigned
+                                    Product
                                 </Typography>
                             </TableCell>
                             <TableCell>
