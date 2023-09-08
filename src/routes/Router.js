@@ -2,7 +2,8 @@ import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
 import ProductList from 'src/views/products/product_list';
-
+import FormProduct from 'src/views/products/form_product';
+import FormProductedit from 'src/views/products/form_edit_product';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
@@ -36,6 +37,8 @@ const Router = [
     element: <FullLayout />,
     children: [
       { path: 'list', element: <ProductList /> },
+      { path: 'add', element: <FormProduct /> },
+      { path: 'edit', element: <FormProductedit /> },
     ],
   },
   {
