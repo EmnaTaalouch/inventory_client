@@ -68,5 +68,5 @@ export const { addUser, createUserList, updateUserFromList, removeUserFromList, 
   userSlice.actions;
 export default userSlice.reducer;
 
-// ----------------------------------------------------------------------
+// ---------------------------------------------------------------------- thunks
 
