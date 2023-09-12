@@ -1,14 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Grid, Box, Card, Stack, Typography, TextField, Button , FormControlLabel } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
+import { Grid, Box, Card, Stack, Typography, TextField, Button , FormControlLabel  } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Switch from '@mui/material/Switch';
+import HomeIcon from '@mui/icons-material/Home';
+
 // components
 import PageContainer from 'src/components/container/PageContainer';
 import Logo from 'src/layouts/full/shared/logo/Logo';
 
 function FormEditProduct() {
+  const navigate = useNavigate();
+
+  const handleReturnToList = () => {
+    navigate('/product/list');
+  };
   return (
     <PageContainer title="Form" description="This is a form page">
       <Box
@@ -28,6 +36,7 @@ function FormEditProduct() {
         }}
       >
         <Grid item spacing={0} justifyContent="center" sx={{ height: '100vh'  }}>
+          
           <Grid
             item
             xs={12}
@@ -38,6 +47,7 @@ function FormEditProduct() {
             justifyContent="center"
             alignItems="center"
           >
+            
             <Card elevation={4} sx={{ p: 4, zIndex: 1, width: '100%' }} style={{ maxWidth: '700px' }}>
 
               <Box display="flex" alignItems="center" justifyContent="center">
@@ -86,11 +96,22 @@ function FormEditProduct() {
                   Modifier
                 </Button>
                 </div>
-
+                
+      
             </Card>
-
+            
+            
           </Grid>
-
+          <div style={{ marginBottom: '16px' }}></div>
+          <div style={{ textAlign: 'center' }}>
+          <div>
+      
+          <HomeIcon color="secondary" style={{ marginLeft: '-600px', cursor: 'pointer' }} onClick={handleReturnToList} />
+        
+      
+    </div>
+        </div>
+    
         </Grid>
         
       </Box>

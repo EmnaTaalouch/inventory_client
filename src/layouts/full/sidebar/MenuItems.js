@@ -18,6 +18,16 @@ const Menuitems = [
   },
   {
     navlabel: true,
+    subheader: 'User Management',
+  },
+  {
+    id: uniqueId(),
+    title: 'User List',
+    icon: IconTypography,
+    href: '/user/list',
+  },
+  {
+    navlabel: true,
     subheader: 'Product Management',
   },
   {
@@ -25,6 +35,26 @@ const Menuitems = [
     title: 'Product List',
     icon: IconTypography,
     href: '/product/list',
+  },
+  {
+    navlabel: true,
+    subheader: 'Order Management',
+  },
+  {
+    id: uniqueId(),
+    title: 'Order List',
+    icon: IconTypography,
+    href: '/order/list',
+  },
+  {
+    navlabel: true,
+    subheader: 'Invoice Management',
+  },
+  {
+    id: uniqueId(),
+    title: 'Liste des factures',
+    icon: IconTypography,
+    href: '/invoice/list',
   },
   {
     navlabel: true,

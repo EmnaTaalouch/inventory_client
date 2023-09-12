@@ -7,7 +7,7 @@ import Switch from '@mui/material/Switch';
 // components
 import PageContainer from 'src/components/container/PageContainer';
 import Logo from 'src/layouts/full/shared/logo/Logo';
-
+import HomeIcon from '@mui/icons-material/Home';
 function FormProduct() {
   return (
     <PageContainer title="Form" description="This is a form page">
@@ -90,7 +90,15 @@ function FormProduct() {
             </Card>
 
           </Grid>
-
+          <div style={{ marginBottom: '16px' }}></div>
+          <div style={{ textAlign: 'center' }}>
+          <div>
+      
+          <HomeIcon color="secondary" style={{ marginLeft: '-600px', cursor: 'pointer' }} />
+        
+      
+    </div>
+        </div>
         </Grid>
         
       </Box>

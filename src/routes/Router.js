@@ -4,6 +4,9 @@ import Loadable from '../layouts/full/shared/loadable/Loadable';
 import ProductList from 'src/views/products/product_list';
 import FormProduct from 'src/views/products/form_product';
 import FormProductedit from 'src/views/products/form_edit_product';
+import OrderList from 'src/views/orders/orderList';
+import UserList from 'src/views/users/userList';
+import InvoiceList from 'src/views/invoice/invoiceList';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
@@ -33,12 +36,39 @@ const Router = [
     ],
   },
   {
+    path: '/user',
+    element: <FullLayout />,
+    children: [
+      { path: 'list', element: <UserList /> },
+      //{ path: 'add', element: <FormProduct /> },
+     // { path: 'edit', element: <FormProductedit /> },
+    ],
+  },
+  {
     path: '/product',
     element: <FullLayout />,
     children: [
       { path: 'list', element: <ProductList /> },
       { path: 'add', element: <FormProduct /> },
       { path: 'edit', element: <FormProductedit /> },
+    ],
+  },
+  {
+    path: '/order',
+    element: <FullLayout />,
+    children: [
+      { path: 'list', element: <OrderList /> },
+      //{ path: 'add', element: <FormProduct /> },
+      //{ path: 'edit', element: <FormProductedit /> },
+    ],
+  },
+  {
+    path: '/invoice',
+    element: <FullLayout />,
+    children: [
+      { path: 'list', element: <InvoiceList /> },
+      //{ path: 'add', element: <FormProduct /> },
+      //{ path: 'edit', element: <FormProductedit /> },
     ],
   },
   {
