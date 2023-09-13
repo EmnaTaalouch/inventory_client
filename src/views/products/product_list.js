@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Typography,
   Box,
@@ -25,56 +26,30 @@ import PageContainer from 'src/components/container/PageContainer';
 import DashboardCard from '../../components/shared/DashboardCard';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
-
-const products = [
-  {
-    id: "1",
-    name: "Sunil Joshi",
-    post: "Web Designer",
-    pname: "Elite Admin",
-    priority: "Low",
-    pbg: "primary.main",
-    budget: "3.9",
-  },
-  {
-    id: "2",
-    name: "Andrew McDownland",
-    post: "Project Manager",
-    pname: "Real Homes WP Theme",
-    priority: "Medium",
-    pbg: "secondary.main",
-    budget: "24.5",
-  },
-  {
-    id: "3",
-    name: "Christopher Jamil",
-    post: "Project Manager",
-    pname: "MedicalPro WP Theme",
-    priority: "High",
-    pbg: "error.main",
-    budget: "12.8",
-  },
-  {
-    id: "4",
-    name: "Nirav Joshi",
-    post: "Frontend Engineer",
-    pname: "Hosting Press HTML",
-    priority: "Critical",
-    pbg: "success.main",
-    budget: "2.4",
-  },
-];
+import { fetchProducts } from '../../redux/slices/productSlice';
 
 const options = ['Edit'];
-
 const ITEM_HEIGHT = 48;
 
 const ProductList = () => {
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.product);
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const menuOpen = Boolean(anchorEl);
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    setMenuOpen(true);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+    setMenuOpen(false);
   };
 
   const [open, setOpen] = React.useState(false);
@@ -90,7 +65,7 @@ const ProductList = () => {
   };
 
   return (
-    <PageContainer title="Table des produits" description="this is Sample page">
+    <PageContainer title="Table des produits" description="This is a Sample page">
       <div>
         <TextField id="outlined-multiline-flexible" label="Recherche" maxRows={4} />
       </div>
@@ -108,128 +83,19 @@ const ProductList = () => {
               <TableRow>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    Produit
+                    Produit ID
                   </Typography>
                 </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle2" fontWeight={600}>
-                    Libelle
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle2" fontWeight={600}>
-                    Prix
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle2" fontWeight={600}>
-                    Quantité
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="subtitle2" fontWeight={600}>
-                    Disponibilité
-                  </Typography>
-                </TableCell>
+                {/* ... (rest of your table head cells) ... */}
               </TableRow>
             </TableHead>
             <TableBody>
               {products.map((product) => (
-                <TableRow key={product.name}>
+                <TableRow key={product.productid}>
                   <TableCell>
-                    <Typography
-                      sx={{
-                        fontSize: '15px',
-                        fontWeight: '500',
-                      }}
-                    >
-                      {product.id}
-                    </Typography>
+                    {/* ... (table cell content) ... */}
                   </TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          {product.name}
-                        </Typography>
-                        <Typography
-                          color="textSecondary"
-                          sx={{
-                            fontSize: '13px',
-                          }}
-                        >
-                          {product.post}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
-                      {product.pname}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      sx={{
-                        px: '4px',
-                        backgroundColor: product.pbg,
-                        color: '#fff',
-                      }}
-                      size="small"
-                      label={product.priority}
-                    ></Chip>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="h6">${product.budget}k</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      aria-label="more"
-                      id="long-button"
-                      aria-controls={menuOpen ? 'long-menu' : undefined}
-                      aria-expanded={menuOpen ? 'true' : undefined}
-                      aria-haspopup="true"
-                      onClick={handleClick}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-  id="long-menu"
-  MenuListProps={{
-    'aria-labelledby': 'long-button',
-  }}
-  anchorEl={anchorEl}
-  open={menuOpen}
-  onClose={handleClose}
-  PaperProps={{
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5,
-      width: '20ch',
-    },
-  }}
->
-  {options.map((option) => (
-    <MenuItem key={option} onClick={option === 'Edit' ? handleClose : undefined}>
-      {option === 'Edit' ? (
-        <Link component={Link} to="/product/edit">
-          Modifier
-        </Link>
-      ) : null}
-    </MenuItem>
-  ))}
-  {/* Delete Confirmation Dialog */}
-  <MenuItem key="Delete" onClick={handleClickOpen}>
-    Supprimer
-  </MenuItem>
-</Menu>
-
-                   
-                  </TableCell>
+                  {/* ... (rest of your table cells) ... */}
                 </TableRow>
               ))}
             </TableBody>
@@ -253,7 +119,7 @@ const ProductList = () => {
         <DialogTitle id="responsive-dialog-title">{"Suppression d'un produit ! ! "}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Voulez vous supprimer ce produit
+            Voulez-vous supprimer ce produit?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

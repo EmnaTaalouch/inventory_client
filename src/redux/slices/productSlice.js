@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { productAction } from '../../actions/productAction'; 
+//import { productAction } from '../../actions/productAction'; 
 import { dispatch } from '../store'; 
-
+import { ProductApi } from '../../actions/productAction';
 // Async Thunks
 export const fetchProducts = createAsyncThunk('product/fetchProducts', async () => {
   try {
-    const result = await productAction.getAllProducts(); 
+    const result = await ProductApi.getAllProducts(); 
     return result;
   } catch (err) {
     throw new Error(err.message);
@@ -88,7 +88,7 @@ export function getProductById(productId) {
     return async () => {
       dispatch(productSlice.actions.startLoading());
       try {
-        const response = await productAction.getProductById(productId); // Replace with your API call
+        const response = await ProductApi.getProductById(productId); // Replace with your API call
         dispatch(productSlice.actions.setProduct(response));
       } catch (error) {
         dispatch(productSlice.actions.hasError(error));
@@ -104,7 +104,7 @@ export function updateProductAsync(productId, updatedProduct) {
     dispatch(productSlice.actions.startLoading());
     try {
       //update the product
-      const response = await productAction.updateProduct(productId, updatedProduct);
+      const response = await ProductApi.updateProduct(productId, updatedProduct);
 
       // Dispatch the synchronous action to update the product in the state
       dispatch(productSlice.actions.updateProduct(response));
@@ -119,7 +119,7 @@ export function addProductAsync(newProduct) {
     dispatch(productSlice.actions.startLoading());
     try {
       //add the new product
-      const response = await productAction.addProduct(newProduct);
+      const response = await ProductApi.addProduct(newProduct);
 
       // Dispatch the synchronous action to add the new product to the state
       dispatch(productSlice.actions.addProduct(response));
@@ -134,7 +134,7 @@ export function removeProductAsync(productId) {
     dispatch(productSlice.actions.startLoading());
     try {
       //remove the product 
-      await productAction.removeProduct(productId);
+      await ProductApi.removeProduct(productId);
 
       // Dispatch the synchronous action to remove the product from the state
       dispatch(productSlice.actions.removeProduct(productId));

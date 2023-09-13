@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { orderAction } from '../../actions/orderAction'; 
+//import { orderAction } from '../../actions/orderAction'; 
 import { dispatch } from '../store'; 
-
+import { OrderApi } from 'src/actions/orderAction';
 // Async Thunks
 export const fetchOrders = createAsyncThunk('order/fetchOrders', async () => {
   try {
-    const result = await orderAction.getAllOrders(); 
+    const result = await OrderApi.getAllOrders(); 
     return result;
   } catch (err) {
     throw new Error(err.message);
@@ -88,7 +88,7 @@ export function getOrderById(orderId) {
     return async () => {
       dispatch(orderSlice.actions.startLoading());
       try {
-        const response = await orderAction.getOrderById(orderId); // Replace with your API call
+        const response = await OrderApi.getOrderById(orderId); // Replace with your API call
         dispatch(orderSlice.actions.setOrder(response));
       } catch (error) {
         dispatch(orderSlice.actions.hasError(error));
@@ -104,7 +104,7 @@ export function updateOrderAsync(orderId, updatedOrder) {
     dispatch(orderSlice.actions.startLoading());
     try {
       //update the order
-      const response = await orderAction.updateOrder(orderId, updatedOrder);
+      const response = await OrderApi.updateOrder(orderId, updatedOrder);
 
       // Dispatch the synchronous action to update the order in the state
       dispatch(orderSlice.actions.updateOrder(response));
@@ -119,7 +119,7 @@ export function addOrderAsync(newOrder) {
     dispatch(orderSlice.actions.startLoading());
     try {
       //add the new order
-      const response = await orderAction.addOrder(newOrder);
+      const response = await OrderApi.addOrder(newOrder);
 
       // Dispatch the synchronous action to add the new order to the state
       dispatch(orderSlice.actions.addOrder(response));
@@ -134,7 +134,7 @@ export function removeOrderAsync(orderId) {
     dispatch(orderSlice.actions.startLoading());
     try {
       //remove the order 
-      await orderAction.removeOrder(orderId);
+      await OrderApi.removeOrder(orderId);
 
       // Dispatch the synchronous action to remove the order from the state
       dispatch(orderSlice.actions.removeOrder(orderId));

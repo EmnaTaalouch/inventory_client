@@ -1,13 +1,19 @@
 import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './redux/store'; // Import your Redux store
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = createRoot(document.getElementById('root'));
+
 root.render(
-  <Suspense>
+  <Suspense fallback={<div>Loading...</div>}>
     <BrowserRouter>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </BrowserRouter>
   </Suspense>
 );
+

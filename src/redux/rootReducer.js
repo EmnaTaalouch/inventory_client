@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import productSlice from './slices/productSlice';
 import orderSlice from './slices/orderSlice';
 import userSlice from './slices/userSlice';
-import cartSlice from './slices/cartSlice';
+
 
 
 
@@ -22,7 +22,7 @@ const rootPersistConfig = {
 
 
 const rootReducer = combineReducers({
-    cart : cartSlice,
+    
     order : orderSlice,
     user: userSlice,
     product : productSlice,
