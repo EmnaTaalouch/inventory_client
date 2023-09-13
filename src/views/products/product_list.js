@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   Typography,
   Box,
@@ -26,9 +25,12 @@ import PageContainer from 'src/components/container/PageContainer';
 import DashboardCard from '../../components/shared/DashboardCard';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
+
 import { fetchProducts } from '../../redux/slices/productSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 const options = ['Edit'];
+
 const ITEM_HEIGHT = 48;
 
 const ProductList = () => {
@@ -63,7 +65,34 @@ const ProductList = () => {
   const handleClose = () => {
     setOpen(false);
   };
+// Check if loading
+if (loading) {
+  return <div>Loading...</div>;
+}
 
+// Check for errors
+if (error) {
+  return <div>Error: {error}</div>;
+}
+
+// Check if products are empty
+if (products.length === 0) {
+  return (
+    <PageContainer title="Table des produits" description="No products available">
+      <div>
+        <TextField id="outlined-multiline-flexible" label="Recherche" maxRows={4} />
+      </div>
+      <div style={{ marginBottom: '16px' }}></div>
+      <DashboardCard title="Table des produits">
+        <Typography variant="subtitle2" fontWeight={600}>
+          No products available.
+        </Typography>
+      </DashboardCard>
+    </PageContainer>
+  );
+}
+
+// If products are available, render the table
   return (
     <PageContainer title="Table des produits" description="This is a Sample page">
       <div>
@@ -86,16 +115,125 @@ const ProductList = () => {
                     Produit ID
                   </Typography>
                 </TableCell>
-                {/* ... (rest of your table head cells) ... */}
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    nom
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    Prix
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    Quantité
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    Disponibilité
+                  </Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {products.map((product) => (
                 <TableRow key={product.productid}>
                   <TableCell>
-                    {/* ... (table cell content) ... */}
+                    <Typography
+                      sx={{
+                        fontSize: '15px',
+                        fontWeight: '500',
+                      }}
+                    >
+                      {product.productid}
+                    </Typography>
                   </TableCell>
-                  {/* ... (rest of your table cells) ... */}
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          {product.name}
+                        </Typography>
+                        <Typography
+                          color="textSecondary"
+                          sx={{
+                            fontSize: '13px',
+                          }}
+                        >
+                          {product.name}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
+                      {product.price}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      sx={{
+                        px: '4px',
+                        backgroundColor: product.isAvailable ? 'success.main' : 'error.main',
+                        color: '#fff',
+                      }}
+                      size="small"
+                      label={product.quantity}
+                    ></Chip>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography variant="h6">
+                      {product.isAvailable ? 'Available' : 'Not Available'}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="more"
+                      id="long-button"
+                      aria-controls={menuOpen ? 'long-menu' : undefined}
+                      aria-expanded={menuOpen ? 'true' : undefined}
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      id="long-menu"
+                      MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                      }}
+                      anchorEl={anchorEl}
+                      open={menuOpen}
+                      onClose={handleCloseMenu}
+                      PaperProps={{
+                        style: {
+                          maxHeight: ITEM_HEIGHT * 4.5,
+                          width: '20ch',
+                        },
+                      }}
+                    >
+                      {options.map((option) => (
+                        <MenuItem key={option} onClick={option === 'Edit' ? handleClose : undefined}>
+                          {option === 'Edit' ? (
+                            <Link component={Link} to={`/product/edit/${product.productid}`}>
+                              Modifier
+                            </Link>
+                          ) : null}
+                        </MenuItem>
+                      ))}
+                      {/* Delete Confirmation Dialog */}
+                      <MenuItem key="Delete" onClick={handleClickOpen}>
+                        Supprimer
+                      </MenuItem>
+                    </Menu>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
