@@ -50,7 +50,7 @@ const Router = [
     children: [
       { path: 'list', element: <ProductList /> },
       { path: 'add', element: <FormProduct /> },
-      { path: 'edit', element: <FormProductedit /> },
+      { path: 'edit/:productId', element: <FormProductedit /> }, // Note the ":productId" param
     ],
   },
   {

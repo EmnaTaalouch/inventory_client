@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Grid,
   Box,
@@ -10,17 +10,14 @@ import {
   Button,
   FormControlLabel,
   Switch,
-  InputAdornment,
-  IconButton,
 } from '@mui/material';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { styled } from '@mui/system'; // Import styled function from @mui/system
+import { styled } from '@mui/system';
 
 // components
 import PageContainer from 'src/components/container/PageContainer';
 import Logo from 'src/layouts/full/shared/logo/Logo';
-import HomeIcon from '@mui/icons-material/Home';
+import { updateProductAsync } from '../../redux/slices/productSlice';
 
 const Container = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -36,12 +33,13 @@ const Container = styled(Box)(({ theme }) => ({
   },
 }));
 
+
 const CardStyled = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(3), // Add padding to the card
+  padding: theme.spacing(3),
   zIndex: 1,
-  width: '80%', // Reduce the width of the card
-  maxWidth: '500px', // Set a maximum width
-  margin: '0 auto', // Center the card horizontally
+  width: '80%',
+  maxWidth: '500px',
+  margin: '0 auto',
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
@@ -56,56 +54,146 @@ const FormStyled = styled('form')(({ theme }) => ({
   },
 }));
 
-const FileInput = styled('input')(({ theme }) => ({
-  display: 'none',
-}));
-
-const FileInputLabel = styled('label')(({ theme }) => ({
-  display: 'block',
-  textAlign: 'center',
-  cursor: 'pointer',
-  color: theme.palette.primary.main,
-}));
-
 const SubmitButtonContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
-  marginTop: theme.spacing(2), // Add margin at the top
+  marginTop: theme.spacing(2),
 }));
 
 function FormEditProduct() {
+  const { productId } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+ 
+  const product = useSelector((state) => {
+    return state.product.products.find((p) => p.id === productId); // Use 'state.products' instead of 'state.product'
+  });
+
+  // Initialize state for form fields
+  const [formData, setFormData] = useState({
+    productName: '',
+    productPrice: '',
+    productQuantity: '',
+    productDescription: '',
+    isAvailable: false,
+  });
+
+  useEffect(() => {
+    // Populate form fields with product data when it's available
+    if (product) {
+      setFormData({
+        productName: product.name,
+        productPrice: product.price,
+        productQuantity: product.quantity,
+        productDescription: product.description,
+        isAvailable: product.isAvailable,
+      });
+    }
+  }, [product]);
 
   const handleReturnToList = () => {
     navigate('/product/list');
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Create an updated product object with the form data
+    const updatedProduct = {
+      id: productId,
+      name: formData.productName,
+      price: formData.productPrice,
+      quantity: formData.productQuantity,
+      description: formData.productDescription,
+      isAvailable: formData.isAvailable,
+    };
+    // Dispatch the updateProductAsync action
+    dispatch(updateProductAsync(updatedProduct))
+      .then(() => {
+        // Redirect to the product list upon successful update
+        navigate('/product/list');
+      })
+      .catch((error) => {
+        // Handle errors here, e.g., show an error message to the user
+        console.error('Error updating product:', error);
+      });
+  };
+
+  const handleChange = (e) => {
+    // Update the form state when form fields change
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value,
+    });
+  };
+
   return (
     <PageContainer title="Modifier le produit" description="Modifier un produit existant">
-      <Container >
+      <Container>
         <Grid container spacing={0} justifyContent="center" alignItems="center" sx={{ height: '100vh' }}>
           <Grid item xs={12} sm={12} lg={4} xl={5} display="flex" justifyContent="center" alignItems="center">
             <CardStyled elevation={4}>
-              <IconButton sx={{ position: 'absolute', top: '16px', left: '16px', cursor: 'pointer' }} onClick={handleReturnToList}>
-                <ArrowBackIcon />
-              </IconButton>
+              <ArrowBackIcon
+                sx={{ position: 'absolute', top: '16px', left: '16px', cursor: 'pointer' }}
+                onClick={handleReturnToList}
+              />
               <LogoContainer>
                 <Logo />
               </LogoContainer>
-              <FormStyled>
-                <TextField label="Nom du produit" variant="outlined" fullWidth />
-                <TextField label="Prix du produit" variant="outlined" fullWidth type="number" />
-                <TextField label="Quantité du produit" variant="outlined" fullWidth type="number" />
-                <TextField label="Description" variant="outlined" fullWidth multiline rows={4} />
-                <FileInput type="file" accept="image/*" id="fileInput" />
-                <FileInputLabel htmlFor="fileInput">Choisir un fichier</FileInputLabel>
-                <FormControlLabel control={<Switch />} label="Disponible" labelPlacement="start" />
+              <FormStyled onSubmit={handleSubmit}>
+                <TextField
+                  label="Nom du produit"
+                  variant="outlined"
+                  fullWidth
+                  name="productName"
+                  value={formData.productName}
+                  onChange={handleChange}
+                />
+                <TextField
+                  label="Prix du produit"
+                  variant="outlined"
+                  fullWidth
+                  type="number"
+                  name="productPrice"
+                  value={formData.productPrice}
+                  onChange={handleChange}
+                />
+                <TextField
+                  label="Quantité du produit"
+                  variant="outlined"
+                  fullWidth
+                  type="number"
+                  name="productQuantity"
+                  value={formData.productQuantity}
+                  onChange={handleChange}
+                />
+                <TextField
+                  label="Description"
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  name="productDescription"
+                  value={formData.productDescription}
+                  onChange={handleChange}
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.isAvailable}
+                      onChange={handleChange}
+                      name="isAvailable"
+                    />
+                  }
+                  label="Disponible"
+                  labelPlacement="start"
+                />
+                <SubmitButtonContainer>
+                  <Button type="submit" variant="contained" color="primary">
+                    Modifier
+                  </Button>
+                </SubmitButtonContainer>
               </FormStyled>
-              <SubmitButtonContainer>
-                <Button type="submit" variant="contained" color="primary">
-                  Modifier
-                </Button>
-              </SubmitButtonContainer>
             </CardStyled>
           </Grid>
         </Grid>

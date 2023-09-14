@@ -26,8 +26,9 @@ import DashboardCard from '../../components/shared/DashboardCard';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
 
-import { fetchProducts } from '../../redux/slices/productSlice';
+import { fetchProducts , removeProductAsync} from '../../redux/slices/productSlice';
 import { useSelector, useDispatch } from 'react-redux';
+
 
 const options = ['Edit'];
 
@@ -41,6 +42,7 @@ const ProductList = () => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
+  console.log(products)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -53,6 +55,7 @@ const ProductList = () => {
     setAnchorEl(null);
     setMenuOpen(false);
   };
+  const selectedProductId = useSelector((state) => state.product.selectedProduct);
 
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
@@ -65,6 +68,27 @@ const ProductList = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const filteredProducts = products.filter((product) =>
+  product.name.toLowerCase().includes(searchQuery.toLowerCase())
+);
+const handleDeleteProduct = () => {
+  if (selectedProductId) {
+    dispatch(removeProductAsync(selectedProductId))
+      .then(() => {
+        // Handle successful deletion if needed
+        console.log('Product deleted successfully');
+        handleClose(); // Close the dialog
+      })
+      .catch((error) => {
+        // Handle errors if needed
+        console.error('Error deleting product:', error);
+        handleClose(); // Close the dialog
+      });
+  }
+};
+
+
 // Check if loading
 if (loading) {
   return <div>Loading...</div>;
@@ -96,7 +120,14 @@ if (products.length === 0) {
   return (
     <PageContainer title="Table des produits" description="This is a Sample page">
       <div>
-        <TextField id="outlined-multiline-flexible" label="Recherche" maxRows={4} />
+      <TextField
+  id="outlined-multiline-flexible"
+  label="Recherche"
+  maxRows={4}
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+/>
+
       </div>
       <div style={{ marginBottom: '16px' }}></div>
       <DashboardCard title="Table des produits">
@@ -117,7 +148,7 @@ if (products.length === 0) {
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    nom
+                    nom du produit
                   </Typography>
                 </TableCell>
                 <TableCell>
@@ -138,7 +169,7 @@ if (products.length === 0) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <TableRow key={product.productid}>
                   <TableCell>
                     <Typography
@@ -161,38 +192,32 @@ if (products.length === 0) {
                         <Typography variant="subtitle2" fontWeight={600}>
                           {product.name}
                         </Typography>
-                        <Typography
-                          color="textSecondary"
-                          sx={{
-                            fontSize: '13px',
-                          }}
-                        >
-                          {product.name}
-                        </Typography>
+                        
                       </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
-                      {product.price}
+                      {product.price} dt
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip
-                      sx={{
-                        px: '4px',
-                        backgroundColor: product.isAvailable ? 'success.main' : 'error.main',
-                        color: '#fff',
-                      }}
-                      size="small"
-                      label={product.quantity}
-                    ></Chip>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="h6">
-                      {product.isAvailable ? 'Available' : 'Not Available'}
+                    <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
+                    {product.quantity}
                     </Typography>
                   </TableCell>
+                  
+                  <TableCell align="left">
+  <Chip
+    label={product.quantity === 0 ? 'Not Available' : (product.isAvailable ? 'Available' : 'Not Available')}
+    size="small"
+    sx={{
+      backgroundColor: product.quantity === 0 ? 'error.main' : (product.isAvailable ? 'success.main' : 'error.main'),
+      color: '#fff',
+    }}
+  />
+</TableCell>
+
                   <TableCell align="right">
                     <IconButton
                       aria-label="more"
@@ -222,9 +247,9 @@ if (products.length === 0) {
                       {options.map((option) => (
                         <MenuItem key={option} onClick={option === 'Edit' ? handleClose : undefined}>
                           {option === 'Edit' ? (
-                            <Link component={Link} to={`/product/edit/${product.productid}`}>
-                              Modifier
-                            </Link>
+                            
+                            <Link to={`/product/edit/${product.productId}`}>Modifier</Link>
+                              
                           ) : null}
                         </MenuItem>
                       ))}
@@ -261,13 +286,13 @@ if (products.length === 0) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Non
-          </Button>
-          <Button onClick={handleClose} autoFocus>
-            Supprimer
-          </Button>
-        </DialogActions>
+  <Button autoFocus onClick={handleClose}>
+    Non
+  </Button>
+  <Button onClick={handleDeleteProduct} autoFocus>
+    Supprimer
+  </Button>
+</DialogActions>
       </Dialog>
     </PageContainer>
   );

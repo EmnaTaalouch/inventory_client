@@ -46,9 +46,11 @@ const productSlice = createSlice({
 
     //Remove a product
     removeProduct: (state, action) => {
-      const productIdToRemove = action.payload;
-      state.products = state.products.filter((product) => product.id !== productIdToRemove);
-      state.loading = false;
+console.log("Removing product with ID:", action.payload);
+const productIdToRemove = action.payload;
+state.products = state.products.filter((product) => product.id !== productIdToRemove);
+console.log("Updated products:", state.products);
+state.loading = false;
     },
 
     // START LOADING
@@ -133,15 +135,17 @@ export function removeProductAsync(productId) {
   return async (dispatch) => {
     dispatch(productSlice.actions.startLoading());
     try {
-      //remove the product 
+      // Remove the product 
       await ProductApi.removeProduct(productId);
 
       // Dispatch the synchronous action to remove the product from the state
-      dispatch(productSlice.actions.removeProduct(productId));
+      dispatch(productSlice.actions.removeProduct(productId)); // Remove the product by ID
     } catch (error) {
       dispatch(productSlice.actions.hasError(error));
     }
   };
 }
+
+
 
   
