@@ -75,6 +75,7 @@ const ProductList = () => {
     const filteredProducts = products.filter((product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
+
     const handleDeleteProduct = async (id) => {
         console.log(id);
 
@@ -148,7 +149,7 @@ const ProductList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {products?.map((product, index) => (
+                            {filteredProducts?.map((product, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
                                         <Typography
