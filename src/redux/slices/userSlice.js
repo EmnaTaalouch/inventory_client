@@ -9,6 +9,7 @@ import { dispatch } from '../store';
 export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
     try {
         const result = await UserApi.getAllUsers();
+        console.log(result);
         return result;
     } catch (err) {
         throw new Error(err.message);
@@ -50,25 +51,28 @@ const userSlice = createSlice({
             state.error = action.payload;
         },
         removeUserFromList: (state, action) => {
-            state.users = state.users.filter((item) => item._id !== action.payload._id);
+            state.users = state.users.filter((user) => user.id !== action.payload);
+
+            state.loading = false;
         },
+
         updateCurrentUser: (state, action) => {
             state.currentUser = action.payload;
         },
     },
-    //* extraReducers: (builder) => {
-    //    builder
-    //      .addCase(userRegister.pending, (state) => (state.loading = true))
-    //    .addCase(userRegister.fulfilled, (state) => (state.loading = false))
-    //  .addCase(fetchUsersList.pending, (state) => (state.loading = true))
-    //.addCase(fetchUsersList.fulfilled, (state, action) => {
-    //  state.users = action.payload;
-    //state.loading = false;
-    // })
-    // .addCase(updateCurrentUser, (state, action) => {
-    //    state.currentUser = action.payload;
-    // });
-    // },
+    extraReducers: (builder) => {
+        builder
+            //      .addCase(userRegister.pending, (state) => (state.loading = true))
+            //    .addCase(userRegister.fulfilled, (state) => (state.loading = false))
+            //.addCase(fetchUsers.pending, (state) => (state.loading = true))
+            .addCase(fetchUsers.fulfilled, (state, action) => {
+                state.users = action.payload;
+                state.loading = false;
+            });
+        // .addCase(updateCurrentUser, (state, action) => {
+        //    state.currentUser = action.payload;
+        // });
+    },
 });
 
 export const {
@@ -82,3 +86,18 @@ export const {
 export default userSlice.reducer;
 
 // ---------------------------------------------------------------------- thunks
+
+export function removeUserAsync(id) {
+    return async () => {
+        dispatch(userSlice.actions.startLoading());
+        try {
+            //remove the order
+            await UserApi.deleteUser(id);
+
+            // Dispatch the synchronous action to remove the user from the state
+            dispatch(userSlice.actions.removeUserFromList(id));
+        } catch (error) {
+            dispatch(userSlice.actions.hasError(error.message));
+        }
+    };
+}

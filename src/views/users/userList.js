@@ -22,12 +22,13 @@ import {
     FormControl,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { fetchUsers, removeUserFromList, updateUserFromList } from '../../redux/slices/userSlice';
+import { fetchUsers, removeUserAsync } from '../../redux/slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
+const ITEM_HEIGHT = 48;
 const UserList = () => {
     //const [users, setUsers] = useState(initialUsers);
     const [selectedUserId, setSelectedUserId] = React.useState(null);
+
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const users = useSelector((state) => state.user.users);
@@ -38,9 +39,11 @@ const UserList = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchUsers());
-        console.log(users);
     }, [dispatch]);
-    console.log(users);
+
+    useEffect(() => {
+        console.log(users); // This will log the updated users array when it changes.
+    }, [users]);
 
     const handleClose = () => {
         setOpen(false);
@@ -50,8 +53,17 @@ const UserList = () => {
         console.log(id);
 
         if (selectedUserId) {
-            dispatch(removeUserFromList(selectedUserId));
-            handleClose(); // Close the dialog
+            try {
+                // Make the delete request
+                await dispatch(removeUserAsync(selectedUserId));
+
+                // Log the success message
+                console.log('User deleted successfully');
+                handleClose(); // Close the dialog
+            } catch (error) {
+                // Log any errors
+                console.error('Error deleting user:', error);
+            }
         }
     };
     console.log(users);
