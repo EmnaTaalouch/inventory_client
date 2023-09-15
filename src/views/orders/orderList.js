@@ -53,8 +53,8 @@ function OrderList() {
     //const [selectedStatus, setSelectedStatus] = useState('');
     const [anchorEl, setAnchorEl] = React.useState(null);
     //const menuOpen = Boolean(anchorEl);
-    const [orders, setOrders] = useState([]);
-
+    //const [orders, setOrders] = useState([]);
+    const orders = useSelector((state) => state.order.orders);
     const handleClickOpen = (id) => {
         setOpen(true);
         setSelectedOrderId(id); // Set the selected order ID here
@@ -62,15 +62,7 @@ function OrderList() {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(fetchOrders()).then((action) => {
-            if (fetchOrders.fulfilled.match(action)) {
-                // The data has been successfully fetched
-                setOrders(action.payload);
-            } else if (fetchOrders.rejected.match(action)) {
-                // Handle the error if needed
-                console.error('Error fetching orders:', action.payload);
-            }
-        });
+        dispatch(fetchOrders());
     }, [dispatch]);
 
     const handleClose = () => {
@@ -103,9 +95,10 @@ function OrderList() {
 
         if (selectedOrderId) {
             dispatch(removeOrderAsync(selectedOrderId));
-            handleClose();
+            handleClose(); // Close the dialog
         }
     };
+
     return (
         <PageContainer title="Table des commandes" description="this is Sample page">
             <div style={{ marginBottom: '16px' }}></div>

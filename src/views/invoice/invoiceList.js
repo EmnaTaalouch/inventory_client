@@ -16,36 +16,49 @@ import {
     InputAdornment,
     TextField,
     Grid,
+    Button,
+    useTheme,
+    useMediaQuery,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MonthlyEarnings from '../dashboard/components/MonthlyEarnings';
 import axios from 'axios';
-
+import { useDispatch, useSelector } from 'react-redux';
 // Define your API base URL
 const API_BASE_URL = 'http://localhost:3000';
 
 const InvoiceList = () => {
+    const [invoices, setInvoices] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [open, setOpen] = React.useState(false);
     const [selectedStatus, setSelectedStatus] = useState('All');
     const [filteredInvoices, setFilteredInvoices] = useState([]);
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
     };
-    const [invoices, setInvoices] = useState([]);
-    //const [filterStatus, setFilterStatus] = useState('All');
-    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedInvoiceId, setSelectedInvoiceId] = React.useState(null); // Added selectedInvoiceId state
 
+    //const [filterStatus, setFilterStatus] = useState('All');
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     // Define your invoices API endpoint
     const INVOICES_ENDPOINT = `${API_BASE_URL}/invoice`;
-
+    const handleClickOpen = (id) => {
+        setOpen(true);
+        setSelectedInvoiceId(id); // Set the selected order ID here
+    };
     useEffect(() => {
-        // Fetch all invoices from the backend when the component mounts
         axios
             .get(INVOICES_ENDPOINT)
             .then((response) => {
-                // Update the state with the fetched invoices
-                console.log(response);
                 setInvoices(response.data);
-                console.log(invoices);
             })
             .catch((error) => {
                 console.error('Error fetching invoices:', error);
@@ -54,18 +67,31 @@ const InvoiceList = () => {
 
     // Function to delete an invoice
     const deleteInvoice = (invoiceId) => {
+        // Set the selected invoice ID before opening the dialog
+
         axios
             .delete(`${INVOICES_ENDPOINT}/${invoiceId}`)
             .then(() => {
-                // Remove the deleted invoice from the state
                 setInvoices((prevInvoices) =>
                     prevInvoices.filter((invoice) => invoice.id !== invoiceId),
                 );
+                setOpen(false); // Close the delete confirmation dialog
             })
             .catch((error) => {
                 console.error('Error deleting invoice:', error);
             });
     };
+
+    const handleOpenDeleteDialog = (id) => {
+        setSelectedInvoiceId(id);
+        // Open the delete confirmation dialog
+        setOpen(true);
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setOpen(false); // Close the delete confirmation dialog
+    };
+    const dispatch = useDispatch();
 
     // Function to filter invoices by status
     const filterInvoices =
@@ -146,7 +172,7 @@ const InvoiceList = () => {
                                       <TableCell>
                                           <IconButton
                                               color="secondary"
-                                              onClick={() => deleteInvoice(invoice.id)}
+                                              onClick={() => handleClickOpen(invoice.id)}
                                           >
                                               <DeleteIcon />
                                           </IconButton>
@@ -164,7 +190,7 @@ const InvoiceList = () => {
                                       <TableCell>
                                           <IconButton
                                               color="secondary"
-                                              onClick={() => deleteInvoice(invoice.id)}
+                                              onClick={() => handleClickOpen(invoice.id)}
                                           >
                                               <DeleteIcon />
                                           </IconButton>
@@ -181,6 +207,29 @@ const InvoiceList = () => {
                     data={{ amount: invoices.reduce((a, b) => a + parseInt(b.totalAmount), 0) }}
                 />
             </Grid>
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+                open={open}
+                onClose={handleCloseDeleteDialog}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Suppression d'une facture"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Voulez-vous vraiment supprimer cette facture ?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={handleCloseDeleteDialog}>
+                        Non
+                    </Button>
+                    <Button onClick={() => deleteInvoice(selectedInvoiceId)} color="secondary">
+                        Supprimer
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
