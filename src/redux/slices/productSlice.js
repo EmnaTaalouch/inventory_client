@@ -38,9 +38,10 @@ const productSlice = createSlice({
         },
 
         //Add a new product
-        addProduct: (state, action) => {
+        createProduct: (state, action) => {
             const newProduct = action.payload;
             state.products.push(newProduct);
+            console.log(newProduct);
             state.loading = false;
         },
         setProduct: (state, action) => {
@@ -120,15 +121,13 @@ export function updateProductAsync(productId, updatedProduct) {
 }
 
 export function addProductAsync(newProduct) {
-    return async () => {
-        dispatch(productSlice.actions.startLoading());
+    return async (dispatch) => {
         try {
-            //add the new product
-            const response = await ProductApi.addProduct(newProduct);
-
-            // Dispatch the synchronous action to add the new product to the state
-            dispatch(productSlice.actions.addProduct(response));
+            const response = await ProductApi.createProduct(newProduct);
+            console.log(response);
+            dispatch(productSlice.actions.createProduct(response));
         } catch (error) {
+            console.error(error); // Log any errors to the console
             dispatch(productSlice.actions.hasError(error));
         }
     };
