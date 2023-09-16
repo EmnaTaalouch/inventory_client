@@ -70,8 +70,9 @@ const UserList = () => {
     return (
         <div>
             <Typography variant="h4" gutterBottom>
-                Liste des clients
+                Liste des utilisateurs
             </Typography>
+            <div style={{ marginBottom: '50px' }}></div>
             <Paper>
                 <Table>
                     <TableHead>
@@ -83,12 +84,12 @@ const UserList = () => {
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Nom du client
+                                    Nom
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Email du client
+                                    Email
                                 </Typography>
                             </TableCell>
                             <TableCell>Supprimer</TableCell>

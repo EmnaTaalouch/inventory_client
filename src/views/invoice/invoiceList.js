@@ -134,6 +134,7 @@ const InvoiceList = () => {
                         ),
                     }}
                 />
+
                 <FormControl variant="outlined" size="medium" style={{ marginLeft: '8px' }}>
                     <InputLabel id="demo-simple-select-label">Statut</InputLabel>
                     <Select
@@ -148,6 +149,7 @@ const InvoiceList = () => {
                     </Select>
                 </FormControl>
             </Box>
+            <div style={{ marginBottom: '50px' }}></div>
             <Paper>
                 <Table>
                     <TableHead>

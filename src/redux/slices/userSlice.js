@@ -87,6 +87,21 @@ export default userSlice.reducer;
 
 // ---------------------------------------------------------------------- thunks
 
+// Thunk Action Creators
+export function getUserById(id) {
+    return async () => {
+        dispatch(userSlice.actions.startLoading());
+        try {
+            const response = await UserApi.getUserById(id); // Replace with your API call
+
+            dispatch(userSlice.actions.setUser(response));
+        } catch (error) {
+            console.log(error);
+            dispatch(userSlice.actions.hasError(error));
+        }
+    };
+}
+
 export function removeUserAsync(id) {
     return async () => {
         dispatch(userSlice.actions.startLoading());
@@ -98,6 +113,19 @@ export function removeUserAsync(id) {
             dispatch(userSlice.actions.removeUserFromList(id));
         } catch (error) {
             dispatch(userSlice.actions.hasError(error.message));
+        }
+    };
+}
+
+export function updateUserAsync(id, updatedUser) {
+    return async () => {
+        dispatch(userSlice.actions.startLoading());
+        try {
+            const response = await UserApi.updateUser(id, updatedUser);
+
+            dispatch(userSlice.actions.updateCurrentUser(response));
+        } catch (error) {
+            dispatch(userSlice.actions.hasError(error));
         }
     };
 }
