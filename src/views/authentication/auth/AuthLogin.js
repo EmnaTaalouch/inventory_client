@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Box,
     Typography,
@@ -11,21 +11,34 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 
 import CustomTextField from '../../../components/forms/theme-elements/CustomTextField';
-import axios from 'axios';
 import useAuth from '../../../hooks/useAuth';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const AuthLogin = ({ title, subtitle, subtext }) => {
     const { login } = useAuth();
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleFormSubmit = async () => {
-        console.log(username);
-        console.log(password);
-        await login(username, password);
-        navigate('/dashboard');
-    };
+    // Define the validation schema using Yup
+    const validationSchema = Yup.object({
+        username: Yup.string().required('Username is required'),
+        password: Yup.string().required('Password is required'),
+    });
+
+    // Initialize Formik with initial values and validation schema
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: '',
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            console.log(values.username);
+            console.log(values.password);
+            await login(values.username, values.password);
+            navigate('/dashboard');
+        },
+    });
 
     return (
         <>
@@ -36,7 +49,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
             ) : null}
 
             {subtext}
-            <form>
+            <form onSubmit={formik.handleSubmit}>
                 <Stack>
                     <Box>
                         <Typography
@@ -50,10 +63,13 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
                         </Typography>
                         <CustomTextField
                             id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            name="username"
                             variant="outlined"
                             fullWidth
+                            value={formik.values.username}
+                            onChange={formik.handleChange}
+                            error={formik.touched.username && Boolean(formik.errors.username)}
+                            helperText={formik.touched.username && formik.errors.username}
                         />
                     </Box>
                     <Box mt="25px">
@@ -68,11 +84,14 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
                         </Typography>
                         <CustomTextField
                             id="password"
+                            name="password"
                             type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
                             variant="outlined"
                             fullWidth
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            error={formik.touched.password && Boolean(formik.errors.password)}
+                            helperText={formik.touched.password && formik.errors.password}
                         />
                     </Box>
                     <Stack
@@ -84,7 +103,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
                         <FormGroup>
                             <FormControlLabel
                                 control={<Checkbox defaultChecked />}
-                                label="Remeber this Device"
+                                label="Remember this Device"
                             />
                         </FormGroup>
                         <Typography
@@ -106,7 +125,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
                         variant="contained"
                         size="large"
                         fullWidth
-                        onClick={handleFormSubmit}
+                        type="submit"
                     >
                         Sign In
                     </Button>
@@ -116,4 +135,5 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
         </>
     );
 };
+
 export default AuthLogin;

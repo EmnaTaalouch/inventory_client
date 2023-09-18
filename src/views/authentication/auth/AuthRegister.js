@@ -16,6 +16,8 @@ const AuthRegister = ({ title, subtitle, subtext }) => {
         last_name: Yup.string().required('Last Name is required'),
         email: Yup.string().email('Invalid email format').required('Email is required'),
         password: Yup.string().required('Password is required'),
+        phone_number: Yup.string().required('Mobile is required'),
+        address: Yup.string().required('Address is required'),
     });
 
     const formik = useFormik({
@@ -24,12 +26,21 @@ const AuthRegister = ({ title, subtitle, subtext }) => {
             last_name: '',
             email: '',
             password: '',
+            phone_number: '+216 ',
+            address: '',
         },
         validationSchema,
         onSubmit: async (values) => {
             try {
                 console.log(values);
-                await register(values.email, values.password, values.first_name, values.last_name);
+                await register(
+                    values.email,
+                    values.password,
+                    values.first_name,
+                    values.last_name,
+                    values.address,
+                    values.phone_number,
+                );
 
                 window.location.href = '/auth/login';
             } catch (error) {
@@ -91,6 +102,46 @@ const AuthRegister = ({ title, subtitle, subtext }) => {
                             fullWidth
                         />
 
+                        <Typography
+                            variant="subtitle1"
+                            fontWeight={600}
+                            component="label"
+                            htmlFor="name"
+                            mb="5px"
+                        >
+                            address
+                        </Typography>
+                        <CustomTextField
+                            id="address"
+                            variant="outlined"
+                            name="address"
+                            value={formik.values.address}
+                            onChange={formik.handleChange}
+                            error={formik.touched.address && Boolean(formik.errors.address)}
+                            helperText={formik.touched.address && formik.errors.address}
+                            fullWidth
+                        />
+                        <Typography
+                            variant="subtitle1"
+                            fontWeight={600}
+                            component="label"
+                            htmlFor="name"
+                            mb="5px"
+                        >
+                            phone number
+                        </Typography>
+                        <CustomTextField
+                            id="phone_number"
+                            variant="outlined"
+                            name="phone_number"
+                            value={formik.values.phone_number}
+                            onChange={formik.handleChange}
+                            error={
+                                formik.touched.phone_number && Boolean(formik.errors.phone_number)
+                            }
+                            helperText={formik.touched.phone_number && formik.errors.phone_number}
+                            fullWidth
+                        />
                         <Typography
                             variant="subtitle1"
                             fontWeight={600}
