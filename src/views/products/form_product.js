@@ -13,7 +13,8 @@ import {
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { styled } from '@mui/system';
-
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 // components
 import PageContainer from 'src/components/container/PageContainer';
 import Logo from 'src/layouts/full/shared/logo/Logo';
@@ -63,54 +64,34 @@ function FormProduct() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    // Initialize state for form fields
-    const [formData, setFormData] = useState({
-        productName: '',
-        productPrice: 0,
-        productQuantity: 0,
-        productDescription: '',
-        isAvailable: false,
+    const validationSchema = Yup.object({
+        name: Yup.string().required('Name is required'),
+        price: Yup.number().required('Price is required'),
+        quantity: Yup.number().required('Quantity is required'),
+        description: Yup.string().required('Description is required'),
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            price: 0,
+            quantity: 0,
+            description: '',
+            isAvailable: false,
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            try {
+                await dispatch(addProductAsync(values));
+                navigate('/product/list');
+            } catch (error) {
+                console.error('Error adding product:', error);
+            }
+        },
     });
 
     const handleReturnToList = () => {
         navigate('/product/list');
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        // Create a new product object with the form data
-        const newProduct = {
-            name: formData.productName,
-            price: formData.productPrice,
-            quantity: formData.productQuantity,
-            description: formData.productDescription,
-            isAvailable: formData.isAvailable,
-        };
-
-        // Dispatch the addProductAsync action with the new product data
-        dispatch(addProductAsync(newProduct));
-
-        // Reset the form fields after submission
-        setFormData({
-            productName: '',
-            productPrice: 0,
-            productQuantity: 0,
-            productDescription: '',
-            isAvailable: false,
-        });
-
-        // Optionally, you can navigate back to the product list page here
-        navigate('/product/list');
-    };
-
-    const handleChange = (e) => {
-        // Update the form state when form fields change
-        const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === 'checkbox' ? checked : value,
-        });
     };
 
     return (
@@ -146,32 +127,40 @@ function FormProduct() {
                             <LogoContainer>
                                 <Logo />
                             </LogoContainer>
-                            <FormStyled onSubmit={handleSubmit}>
+                            <FormStyled onSubmit={formik.handleSubmit}>
                                 <TextField
                                     label="Nom du produit"
                                     variant="outlined"
                                     fullWidth
-                                    name="productName"
-                                    value={formData.productName}
-                                    onChange={handleChange}
+                                    name="name"
+                                    value={formik.values.name}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.name && Boolean(formik.errors.name)}
+                                    helperText={formik.touched.name && formik.errors.name}
                                 />
                                 <TextField
                                     label="Prix du produit"
                                     variant="outlined"
                                     fullWidth
                                     type="number"
-                                    name="productPrice"
-                                    value={formData.productPrice}
-                                    onChange={handleChange}
+                                    name="price"
+                                    value={formik.values.price}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.price && Boolean(formik.errors.price)}
+                                    helperText={formik.touched.price && formik.errors.price}
                                 />
                                 <TextField
                                     label="Quantité du produit"
                                     variant="outlined"
                                     fullWidth
                                     type="number"
-                                    name="productQuantity"
-                                    value={formData.productQuantity}
-                                    onChange={handleChange}
+                                    name="quantity"
+                                    value={formik.values.quantity}
+                                    onChange={formik.handleChange}
+                                    error={
+                                        formik.touched.quantity && Boolean(formik.errors.quantity)
+                                    }
+                                    helperText={formik.touched.quantity && formik.errors.quantity}
                                 />
                                 <TextField
                                     label="Description"
@@ -179,15 +168,22 @@ function FormProduct() {
                                     fullWidth
                                     multiline
                                     rows={4}
-                                    name="productDescription"
-                                    value={formData.productDescription}
-                                    onChange={handleChange}
+                                    name="description"
+                                    value={formik.values.description}
+                                    onChange={formik.handleChange}
+                                    error={
+                                        formik.touched.description &&
+                                        Boolean(formik.errors.description)
+                                    }
+                                    helperText={
+                                        formik.touched.description && formik.errors.description
+                                    }
                                 />
                                 <FormControlLabel
                                     control={
                                         <Switch
-                                            checked={formData.isAvailable}
-                                            onChange={handleChange}
+                                            checked={formik.values.isAvailable}
+                                            onChange={formik.handleChange}
                                             name="isAvailable"
                                         />
                                     }

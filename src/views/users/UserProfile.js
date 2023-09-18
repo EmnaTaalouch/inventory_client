@@ -27,58 +27,43 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { styled } from '@mui/system';
 import { getUserById, updateUserAsync } from '../../redux/slices/userSlice';
 import { fetchUsers } from 'src/redux/slices/userSlice';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import useAuth from 'src/hooks/useAuth';
 
 const UserProfile = () => {
-    const { id } = useParams();
+    const { user } = useAuth();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { selectedUser, users } = useSelector((state) => state.user);
-    const [formData, setFormData] = useState({
-        first_name: '',
-        last_name: '',
-        phone_number: '',
-        email: '',
-        address: '',
+    const validationSchema = Yup.object({
+        first_name: Yup.string().required('First Name is required'),
+        last_name: Yup.string().required('Last Name is required'),
+        phone_number: Yup.string().required('Mobile is required'),
+        email: Yup.string().email('Invalid email format').required('Email is required'),
+        address: Yup.string().required('Address is required'),
     });
-    const [anchorEl2, setAnchorEl2] = useState(null);
 
-    useEffect(() => {
-        dispatch(fetchUsers());
-        const u = users.find((user) => user.id == id);
-        setFormData({
-            first_name: u?.first_name,
-            last_name: u?.last_name,
-            phone_number: u?.phone_number,
-            email: u?.email,
-            address: u?.address,
-        });
-    }, [dispatch]);
+    const formik = useFormik({
+        initialValues: {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            phone_number: user.phone_number,
+            email: user.email,
+            address: user.address,
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            try {
+                await dispatch(updateUserAsync(user.id, values));
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const updatedUser = {
-            id: id,
-            first_name: formData.first_name,
-            last_name: formData.last_name,
-            phone_number: formData.phone_number,
-            email: formData.email,
-            address: formData.address,
-        };
-
-        dispatch(updateUserAsync(id, updatedUser));
-        navigate('/dashboard');
-    };
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === 'checkbox' ? checked : value,
-        });
-    };
+                window.location.href = '/dashboard';
+            } catch (error) {
+                console.error('Error updating profile:', error);
+            }
+        },
+    });
 
     const [file, setFile] = useState(null);
 
@@ -94,7 +79,7 @@ const UserProfile = () => {
             <DashboardCard title="Mon profil">
                 <Container>
                     {/* Profile Form */}
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={formik.handleSubmit}>
                         <div
                             className="profile"
                             style={{
@@ -130,8 +115,12 @@ const UserProfile = () => {
                                 variant="outlined"
                                 fullWidth
                                 name="first_name"
-                                value={formData.first_name}
-                                onChange={handleChange}
+                                value={formik.values.first_name}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.first_name && Boolean(formik.errors.first_name)
+                                }
+                                helperText={formik.touched.first_name && formik.errors.first_name}
                             />
                             <div style={{ marginBottom: '16px' }}></div>
                             <TextField
@@ -139,8 +128,10 @@ const UserProfile = () => {
                                 variant="outlined"
                                 fullWidth
                                 name="last_name"
-                                value={formData.last_name}
-                                onChange={handleChange}
+                                value={formik.values.last_name}
+                                onChange={formik.handleChange}
+                                error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+                                helperText={formik.touched.last_name && formik.errors.last_name}
                             />
                             <div style={{ marginBottom: '16px' }}></div>
                             <TextField
@@ -148,8 +139,15 @@ const UserProfile = () => {
                                 variant="outlined"
                                 fullWidth
                                 name="phone_number"
-                                value={formData.phone_number}
-                                onChange={handleChange}
+                                value={formik.values.phone_number}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.phone_number &&
+                                    Boolean(formik.errors.phone_number)
+                                }
+                                helperText={
+                                    formik.touched.phone_number && formik.errors.phone_number
+                                }
                             />
                             <div style={{ marginBottom: '16px' }}></div>
                             <TextField
@@ -157,17 +155,21 @@ const UserProfile = () => {
                                 variant="outlined"
                                 fullWidth
                                 name="email"
-                                value={formData.email}
-                                onChange={handleChange}
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                helperText={formik.touched.email && formik.errors.email}
                             />
                             <div style={{ marginBottom: '16px' }}></div>
                             <TextField
                                 label="Address"
                                 variant="outlined"
                                 fullWidth
-                                vname="address"
-                                value={formData.address}
-                                onChange={handleChange}
+                                name="address"
+                                value={formik.values.address}
+                                onChange={formik.handleChange}
+                                error={formik.touched.address && Boolean(formik.errors.address)}
+                                helperText={formik.touched.address && formik.errors.address}
                             />
                             <div style={{ marginBottom: '20px' }}></div>
                             <Button

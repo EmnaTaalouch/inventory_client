@@ -17,7 +17,6 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
 });
 
 const initialState = {
-    currentUser: null,
     users: [],
     loading: false,
     step: false,
@@ -27,10 +26,6 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        addUser: (state, action) => {
-            state.currentUser = action.payload;
-            state.step = false;
-        },
         createUserList: (state, action) => {
             state.users.push(action.payload);
         },
@@ -55,10 +50,6 @@ const userSlice = createSlice({
 
             state.loading = false;
         },
-
-        updateCurrentUser: (state, action) => {
-            state.currentUser = action.payload;
-        },
     },
     extraReducers: (builder) => {
         builder
@@ -75,32 +66,11 @@ const userSlice = createSlice({
     },
 });
 
-export const {
-    addUser,
-    createUserList,
-    updateUserFromList,
-    removeUserFromList,
-    addUserList,
-    updateCurrentUser,
-} = userSlice.actions;
+export const { createUserList, updateUserFromList, removeUserFromList, addUserList } =
+    userSlice.actions;
 export default userSlice.reducer;
 
 // ---------------------------------------------------------------------- thunks
-
-// Thunk Action Creators
-export function getUserById(id) {
-    return async () => {
-        dispatch(userSlice.actions.startLoading());
-        try {
-            const response = await UserApi.getUserById(id); // Replace with your API call
-
-            dispatch(userSlice.actions.setUser(response));
-        } catch (error) {
-            console.log(error);
-            dispatch(userSlice.actions.hasError(error));
-        }
-    };
-}
 
 export function removeUserAsync(id) {
     return async () => {
@@ -122,8 +92,7 @@ export function updateUserAsync(id, updatedUser) {
         dispatch(userSlice.actions.startLoading());
         try {
             const response = await UserApi.updateUser(id, updatedUser);
-
-            dispatch(userSlice.actions.updateCurrentUser(response));
+            console.log(response);
         } catch (error) {
             dispatch(userSlice.actions.hasError(error));
         }
