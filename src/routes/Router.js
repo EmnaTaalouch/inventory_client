@@ -8,12 +8,14 @@ import OrderList from 'src/views/orders/orderList';
 import UserList from 'src/views/users/userList';
 import InvoiceList from 'src/views/invoice/invoiceList';
 import UserProfile from 'src/views/users/UserProfile';
+
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
-
 /* ****Pages***** */
 const Dashboard = Loadable(lazy(() => import('../views/dashboard/Dashboard')));
+const Home = Loadable(lazy(() => import('../views/home/Home')));
+const Shop = Loadable(lazy(() => import('../views/home/shop/Shop')));
 const SamplePage = Loadable(lazy(() => import('../views/sample-page/SamplePage')));
 const Icons = Loadable(lazy(() => import('../views/icons/Icons')));
 const TypographyPage = Loadable(lazy(() => import('../views/utilities/TypographyPage')));
@@ -25,9 +27,17 @@ const Login = Loadable(lazy(() => import('../views/authentication/Login')));
 const Router = [
     {
         path: '/',
+        element: <BlankLayout />,
+        children: [
+            { path: '/', element: <Home /> },
+            { path: '/shop', element: <Shop /> },
+        ],
+    },
+    {
+        path: '/',
         element: <FullLayout />,
         children: [
-            { path: '/', element: <Navigate to="/dashboard" /> },
+            //   { path: '/', element: <Navigate to="/dashboard" /> },
             { path: '/dashboard', exact: true, element: <Dashboard /> },
             { path: '/sample-page', exact: true, element: <SamplePage /> },
             { path: '/icons', exact: true, element: <Icons /> },
@@ -36,6 +46,7 @@ const Router = [
             { path: '*', element: <Navigate to="/auth/404" /> },
         ],
     },
+
     {
         path: '/user',
         element: <FullLayout />,
