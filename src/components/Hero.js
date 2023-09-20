@@ -10,10 +10,10 @@ const Hero = () => {
         <Box className={classes.heroBox}>
             <Grid container spacing={6} className={classes.gridContainer}>
                 <Grid item xs={12} md={7}>
-                    <Typography variant="h3" fontWeight={700} className={classes.title}>
+                    <Typography variant="h2" fontWeight={700} className={classes.title}>
                         Découvrez la qualité dans chaque bouchée
                     </Typography>
-                    <Typography variant="h6" className={classes.subtitle}>
+                    <Typography variant="h5" className={classes.subtitle}>
                         Parcourez notre sélection exceptionnelle de produits alimentaires de
                         première qualité. Nous mettons à votre disposition une variété de délices
                         pour satisfaire votre palais. Avec notre passion pour la nourriture de

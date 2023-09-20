@@ -8,6 +8,7 @@ import OrderList from 'src/views/orders/orderList';
 import UserList from 'src/views/users/userList';
 import InvoiceList from 'src/views/invoice/invoiceList';
 import UserProfile from 'src/views/users/UserProfile';
+///import Checkout from 'src/views/home/checkout/Checkout';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -16,6 +17,7 @@ const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')))
 const Dashboard = Loadable(lazy(() => import('../views/dashboard/Dashboard')));
 const Home = Loadable(lazy(() => import('../views/home/Home')));
 const Shop = Loadable(lazy(() => import('../views/home/shop/Shop')));
+const Checkout = Loadable(lazy(() => import('../views/home/checkout/Checkout')));
 const SamplePage = Loadable(lazy(() => import('../views/sample-page/SamplePage')));
 const Icons = Loadable(lazy(() => import('../views/icons/Icons')));
 const TypographyPage = Loadable(lazy(() => import('../views/utilities/TypographyPage')));
@@ -31,6 +33,7 @@ const Router = [
         children: [
             { path: '/', element: <Home /> },
             { path: '/shop', element: <Shop /> },
+            { path: '/checkout', element: <Checkout /> },
         ],
     },
     {
