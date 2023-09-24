@@ -25,6 +25,7 @@ const AboutUs = () => {
                             variant="contained"
                             color="primary"
                             sx={{ width: '200px', fontSize: '16px', backgroundColor: '#9FD26A' }}
+                            href="#num"
                         >
                             CONTACTEZ NOUS
                         </Button>

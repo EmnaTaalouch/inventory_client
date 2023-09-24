@@ -17,7 +17,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import useStyles from 'src/assets/styles/styles';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import useAuth from 'src/hooks/useAuth';
 function ElevationScroll(props) {
     const { children, window } = props;
     // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -82,6 +83,9 @@ const Header = (props) => {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const { logout, isAuthenticated } = useAuth();
+    const navigate = useNavigate();
+
     return (
         <Box sx={{ marginBottom: '70px' }}>
             <ElevationScroll {...props}>
@@ -124,17 +128,28 @@ const Header = (props) => {
                                 <a href={'/shop'}>
                                     <Typography className={classes.link}>Shop</Typography>
                                 </a>
-                                <a href={'#about'}>
+                                <a href={'/About'}>
                                     <Typography className={classes.link}>About</Typography>
                                 </a>
-
-                                <Typography
-                                    component={Link}
-                                    to="/auth/login"
-                                    className={classes.link}
-                                >
-                                    Login
-                                </Typography>
+                                {isAuthenticated ? (
+                                    <Typography
+                                        className={classes.link}
+                                        onClick={async () => {
+                                            await logout();
+                                            navigate('/auth/login', { replace: true });
+                                        }}
+                                    >
+                                        LogOut
+                                    </Typography>
+                                ) : (
+                                    <Typography
+                                        component={Link}
+                                        to="/auth/login"
+                                        className={classes.link}
+                                    >
+                                        Login
+                                    </Typography>
+                                )}
                             </Box>
                         )}
                     </Toolbar>

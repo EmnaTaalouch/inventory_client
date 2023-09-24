@@ -8,6 +8,10 @@ import OrderList from 'src/views/orders/orderList';
 import UserList from 'src/views/users/userList';
 import InvoiceList from 'src/views/invoice/invoiceList';
 import UserProfile from 'src/views/users/UserProfile';
+import About from 'src/views/home/About';
+import GuestGuard from 'src/guards/GuestGuard';
+import AuthGuard from 'src/guards/AuthGuard';
+
 ///import Checkout from 'src/views/home/checkout/Checkout';
 
 /* ***Layouts**** */
@@ -18,6 +22,7 @@ const Dashboard = Loadable(lazy(() => import('../views/dashboard/Dashboard')));
 const Home = Loadable(lazy(() => import('../views/home/Home')));
 const Shop = Loadable(lazy(() => import('../views/home/shop/Shop')));
 const Checkout = Loadable(lazy(() => import('../views/home/checkout/Checkout')));
+const AboutUs = Loadable(lazy(() => import('../views/home/About')));
 const SamplePage = Loadable(lazy(() => import('../views/sample-page/SamplePage')));
 const Icons = Loadable(lazy(() => import('../views/icons/Icons')));
 const TypographyPage = Loadable(lazy(() => import('../views/utilities/TypographyPage')));
@@ -32,27 +37,61 @@ const Router = [
         element: <BlankLayout />,
         children: [
             { path: '/', element: <Home /> },
-            { path: '/shop', element: <Shop /> },
-            { path: '/checkout', element: <Checkout /> },
+            { path: 'shop', element: <Shop /> },
+            { path: 'checkout', element: <Checkout /> },
+            { path: 'About', element: <About /> },
         ],
     },
     {
-        path: '/',
-        element: <FullLayout />,
+        path: 'dashboard',
+        element: (
+            <AuthGuard>
+                <FullLayout />
+            </AuthGuard>
+        ),
         children: [
             //   { path: '/', element: <Navigate to="/dashboard" /> },
-            { path: '/dashboard', exact: true, element: <Dashboard /> },
-            { path: '/sample-page', exact: true, element: <SamplePage /> },
-            { path: '/icons', exact: true, element: <Icons /> },
-            { path: '/ui/typography', exact: true, element: <TypographyPage /> },
-            { path: '/ui/shadow', exact: true, element: <Shadow /> },
+            // { element: <Navigate to={'/'} replace />, index: true },
+            { path: '', exact: true, element: <Dashboard /> },
+            { path: 'sample-page', exact: true, element: <SamplePage /> },
+            { path: 'icons', exact: true, element: <Icons /> },
+            { path: 'ui/typography', exact: true, element: <TypographyPage /> },
+            { path: 'ui/shadow', exact: true, element: <Shadow /> },
             { path: '*', element: <Navigate to="/auth/404" /> },
+            {
+                path: 'product',
+                children: [
+                    { path: 'list', element: <ProductList /> },
+                    { path: 'add', element: <FormProduct /> },
+                    { path: 'edit/:productId', element: <FormProductedit /> }, // Note the ":productId" param
+                ],
+            },
+            {
+                path: 'order',
+                children: [
+                    { path: 'list', element: <OrderList /> },
+                    //{ path: 'add', element: <FormProduct /> },
+                    //{ path: 'edit', element: <FormProductedit /> },
+                ],
+            },
+            {
+                path: 'invoice',
+                children: [
+                    { path: 'list', element: <InvoiceList /> },
+                    //{ path: 'add', element: <FormProduct /> },
+                    //{ path: 'edit', element: <FormProductedit /> },
+                ],
+            },
         ],
     },
 
     {
         path: '/user',
-        element: <FullLayout />,
+        element: (
+            <AuthGuard>
+                <FullLayout />
+            </AuthGuard>
+        ),
         children: [
             { path: 'list', element: <UserList /> },
             //{ path: 'add', element: <FormProduct /> },
@@ -60,40 +99,28 @@ const Router = [
             { path: 'profile', element: <UserProfile /> },
         ],
     },
-    {
-        path: '/product',
-        element: <FullLayout />,
-        children: [
-            { path: 'list', element: <ProductList /> },
-            { path: 'add', element: <FormProduct /> },
-            { path: 'edit/:productId', element: <FormProductedit /> }, // Note the ":productId" param
-        ],
-    },
-    {
-        path: '/order',
-        element: <FullLayout />,
-        children: [
-            { path: 'list', element: <OrderList /> },
-            //{ path: 'add', element: <FormProduct /> },
-            //{ path: 'edit', element: <FormProductedit /> },
-        ],
-    },
-    {
-        path: '/invoice',
-        element: <FullLayout />,
-        children: [
-            { path: 'list', element: <InvoiceList /> },
-            //{ path: 'add', element: <FormProduct /> },
-            //{ path: 'edit', element: <FormProductedit /> },
-        ],
-    },
+
     {
         path: '/auth',
-        element: <BlankLayout />,
+
         children: [
             { path: '404', element: <Error /> },
-            { path: '/auth/register', element: <Register /> },
-            { path: '/auth/login', element: <Login /> },
+            {
+                path: '/auth/register',
+                element: (
+                    <GuestGuard>
+                        <Register />
+                    </GuestGuard>
+                ),
+            },
+            {
+                path: '/auth/login',
+                element: (
+                    <GuestGuard>
+                        <Login />
+                    </GuestGuard>
+                ),
+            },
             { path: '*', element: <Navigate to="/auth/404" /> },
         ],
     },

@@ -2,10 +2,13 @@ import React from 'react';
 import { Grid, Typography, Button, Box } from '@mui/material';
 import myteam from 'src/assets/images/myteam.jpg';
 import useStyles from 'src/assets/styles/styles';
-
+import { Link, useNavigate } from 'react-router-dom';
 const Hero = () => {
     const classes = useStyles();
-
+    const navigate = useNavigate();
+    const handleGoToShop = () => {
+        navigate('/shop');
+    };
     return (
         <Box className={classes.heroBox}>
             <Grid container spacing={6} className={classes.gridContainer}>
@@ -22,6 +25,7 @@ const Hero = () => {
                     </Typography>
 
                     <Button
+                        onClick={handleGoToShop}
                         variant="contained"
                         color="primary"
                         sx={{ width: '200px', fontSize: '16px', backgroundColor: '#9FD26A' }}

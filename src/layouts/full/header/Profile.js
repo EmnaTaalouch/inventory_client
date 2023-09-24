@@ -14,8 +14,11 @@ import {
 import { IconListCheck, IconMail, IconUser } from '@tabler/icons';
 
 import ProfileImg from 'src/assets/images/profile/user-1.jpg';
+import useAuth from 'src/hooks/useAuth';
 
 const Profile = () => {
+    const { user, logout } = useAuth();
+
     const [anchorEl2, setAnchorEl2] = useState(null);
     const handleClick2 = (event) => {
         setAnchorEl2(event.currentTarget);
@@ -87,10 +90,12 @@ const Profile = () => {
                 </MenuItem>
                 <Box mt={1} py={1} px={2}>
                     <Button
-                        to="/auth/login"
                         variant="outlined"
                         color="primary"
-                        component={Link}
+                        onClick={async () => {
+                            await logout();
+                            navigate('/auth/login', { replace: true });
+                        }}
                         fullWidth
                     >
                         Logout

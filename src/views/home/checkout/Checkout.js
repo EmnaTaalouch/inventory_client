@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import Review from './Review';
+import { getCartSession } from 'src/utils/sessionStorage';
 
 function Copyright() {
     return (
@@ -54,6 +55,7 @@ export default function Checkout() {
         setActiveStep(activeStep - 1);
     };
 
+    console.log(getCartSession());
     return (
         <React.Fragment>
             <CssBaseline />

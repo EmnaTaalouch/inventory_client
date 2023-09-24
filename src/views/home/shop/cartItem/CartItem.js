@@ -1,36 +1,36 @@
 import { Button } from '@material-ui/core';
 import { Wrapper } from './CartItem.styles';
-
-const CartItem = ({ item, addToCart, removeFromCart }) => {
+import React from 'react';
+const CartItem = ({ product, addToCart, removeFromCart }) => {
     return (
         <Wrapper>
             <div>
-                <h3>{item.title}</h3>
+                <h3>{product.name}</h3>
                 <div className="information">
-                    <p>Price: ${item.price}</p>
-                    <p>Total: ${(item.amount * item.price).toFixed(2)}</p>
+                    <p>Price: {product.price} dt</p>
+                    <p>Total: {(product.quantity * product.price).toFixed(2)} dt</p>
                 </div>
                 <div className="buttons">
                     <Button
                         size="small"
                         disableElevation
                         variant="contained"
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(product.productid)}
                     >
                         -
                     </Button>
-                    <p>{item.amount}</p>
+                    <p>{product.quantity}</p>
                     <Button
                         size="small"
                         disableElevation
                         variant="contained"
-                        onClick={() => addToCart(item)}
+                        onClick={() => addToCart(product)}
                     >
                         +
                     </Button>
                 </div>
             </div>
-            <img src={item.image} alt={item.title} />
+            <img src={product.image} alt={product.name} />
         </Wrapper>
     );
 };

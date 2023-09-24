@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Typography,
@@ -7,6 +7,7 @@ import {
     Button,
     Stack,
     Checkbox,
+    Alert,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -18,6 +19,7 @@ import * as Yup from 'yup';
 const AuthLogin = ({ title, subtitle, subtext }) => {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState('');
 
     // Define the validation schema using Yup
     const validationSchema = Yup.object({
@@ -35,8 +37,12 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
         onSubmit: async (values) => {
             console.log(values.username);
             console.log(values.password);
-            await login(values.username, values.password);
-            navigate('/dashboard');
+            try {
+                await login(values.username, values.password);
+            } catch (error) {
+                console.log(error);
+                error.message === 'Unauthorized' && setErrorMessage('verify credencials');
+            }
         },
     });
 
@@ -119,6 +125,12 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
                         </Typography>
                     </Stack>
                 </Stack>
+                {errorMessage !== '' && (
+                    <Box>
+                        <Alert severity="error">{errorMessage}</Alert>
+                    </Box>
+                )}
+
                 <Box>
                     <Button
                         color="primary"

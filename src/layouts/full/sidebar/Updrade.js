@@ -11,12 +11,7 @@ export const Upgrade = () => {
             sx={{ m: 3, p: 3, bgcolor: `${'primary.light'}`, borderRadius: '8px' }}
         >
             <>
-                <Box>
-                    <Typography variant="h6" mb={1}>Unlimited Access</Typography>
-                    <Button color="primary" target="_blank" href="https://adminmart.com/product/modernize-react-mui-dashboard-template/" variant="contained" aria-label="logout" size="small">
-                        Upgrade
-                    </Button>
-                </Box>
+                <div style={{ marginBottom: '40px' }}></div>
                 <Box mt="-35px">
                     <img alt="Remy Sharp" src={img1} width={100} />
                 </Box>

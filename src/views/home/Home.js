@@ -6,7 +6,7 @@ import Hero from 'src/components/Hero';
 import Section from 'src/components/Section';
 import AboutUs from 'src/components/AboutUs';
 import Testimonial from 'src/components/Testimonial';
-import ContactUs from 'src/components/ContactUs';
+//import ContactUs from 'src/components/ContactUs';
 
 const Home = () => {
     return (
@@ -16,7 +16,6 @@ const Home = () => {
                 <Section />
                 <AboutUs />
                 <Testimonial />
-                <ContactUs />
             </Box>
         </PageContainer>
     );

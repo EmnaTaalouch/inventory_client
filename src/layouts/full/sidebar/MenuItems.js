@@ -40,7 +40,7 @@ const Menuitems = [
         id: uniqueId(),
         title: 'Product List',
         icon: IconTypography,
-        href: '/product/list',
+        href: '/dashboard/product/list',
     },
     {
         navlabel: true,
@@ -50,7 +50,7 @@ const Menuitems = [
         id: uniqueId(),
         title: 'Order List',
         icon: IconTypography,
-        href: '/order/list',
+        href: '/dashboard/order/list',
     },
     {
         navlabel: true,
@@ -60,25 +60,9 @@ const Menuitems = [
         id: uniqueId(),
         title: 'Liste des factures',
         icon: IconTypography,
-        href: '/invoice/list',
-    },
-    {
-        navlabel: true,
-        subheader: 'Utilities',
+        href: '/dashboard/invoice/list',
     },
 
-    {
-        id: uniqueId(),
-        title: 'Typography',
-        icon: IconTypography,
-        href: '/ui/typography',
-    },
-    {
-        id: uniqueId(),
-        title: 'Shadow',
-        icon: IconCopy,
-        href: '/ui/shadow',
-    },
     {
         navlabel: true,
         subheader: 'Auth',
@@ -94,23 +78,6 @@ const Menuitems = [
         title: 'Register',
         icon: IconUserPlus,
         href: '/auth/register',
-    },
-
-    {
-        navlabel: true,
-        subheader: 'Extra',
-    },
-    {
-        id: uniqueId(),
-        title: 'Icons',
-        icon: IconMoodHappy,
-        href: '/icons',
-    },
-    {
-        id: uniqueId(),
-        title: 'Sample Page',
-        icon: IconAperture,
-        href: '/sample-page',
     },
 ];
 
