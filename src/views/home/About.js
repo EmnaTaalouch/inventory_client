@@ -16,6 +16,7 @@ const About = () => {
                 Meet our talented team of experts who work tirelessly to achieve our goals and
                 exceed customer expectations.
             </p>
+            <div style={{ marginBottom: '816px' }}></div>
         </div>
     );
 };

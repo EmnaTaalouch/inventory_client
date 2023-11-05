@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography, Button, Box } from '@mui/material';
-import bestTeams from 'src/assets/images/bestTeams.jpg';
+import bestTeams from 'src/assets/images/bestTeams.png';
 import useStyles from 'src/assets/styles/styles';
 const AboutUs = () => {
     const classes = useStyles();
@@ -14,20 +14,20 @@ const AboutUs = () => {
                     </Grid>
 
                     <Grid item xs={12} md={6}>
-                        <Typography variant="h4" fontWeight={600} className={classes.title}>
-                            Des Produits Alimentaires de Qualité à Votre Portée
+                        <Typography variant="h2" fontWeight={600} className={classes.title}>
+                            Quality Products Within Your Reach.
                         </Typography>
                         <Typography className={classes.aboutUsSubtitle}>
-                            Nous nous assurons de vous fournir les meilleurs produits en Tunisie, au
-                            meilleur prix. N'hésitez pas à nous contacter pour toute information
+                            We ensure to provide you with the finest products in Tunisia at the best
+                            prices. Feel free to reach out to us for any inquiries
                         </Typography>
                         <Button
                             variant="contained"
                             color="primary"
-                            sx={{ width: '200px', fontSize: '16px', backgroundColor: '#9FD26A' }}
+                            sx={{ width: '200px', fontSize: '16px', backgroundColor: '#81CAE7' }}
                             href="#num"
                         >
-                            CONTACTEZ NOUS
+                            CONTACT US
                         </Button>
                     </Grid>
                 </Grid>

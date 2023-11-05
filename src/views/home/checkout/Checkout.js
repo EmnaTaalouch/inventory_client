@@ -15,7 +15,7 @@ import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import Review from './Review';
 import { getCartSession } from 'src/utils/sessionStorage';
-
+import { addOrderAsync } from '../../../redux/slices/orderSlice';
 function Copyright() {
     return (
         <Typography variant="body2" color="text.secondary" align="center">

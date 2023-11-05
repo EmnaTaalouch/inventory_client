@@ -11,7 +11,16 @@ const Item = ({ product, handleAddToCart }) => {
             <Grid product sm={4} md={20} lg={17}>
                 <BlankCard style={{ width: '80%', height: '50%', padding: '20px' }}>
                     <Typography component={Link} to="/">
-                        <img src={product.image} alt={product.name} style={{ maxWidth: '100%' }} />
+                        <img
+                            src={product.image}
+                            alt={product.name}
+                            style={{
+                                maxWidth: '100%',
+                                width: '100%', // Add this line
+                                height: '300px', // Adjust the height as per your preference
+                                objectFit: 'cover', // This will maintain the aspect ratio and fill the container
+                            }}
+                        />
                     </Typography>
                     <Tooltip title="Add To Cart">
                         <Fab

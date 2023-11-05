@@ -19,12 +19,12 @@ const Footer = () => {
         >
             <div className={classes.footerColumn}>
                 <Link href="/About" target="_blank" underline="none" sx={{ marginRight: 150 }}>
-                    À propos de nous
+                    About us
                 </Link>
                 <br />
                 <div style={{ marginBottom: '25px' }}></div>
                 <span>
-                    <EmailIcon fontSize="small" sx={{ marginRight: 1 }} /> your@email.com
+                    <EmailIcon fontSize="small" sx={{ marginRight: 1 }} /> artease@contact.com
                 </span>
             </div>
             <div className={classes.footerColumn}>
@@ -33,7 +33,7 @@ const Footer = () => {
                     <div className={classes.footerColumn}>
                         {' '}
                         <Link
-                            href="https://www.facebook.com/yourfacebookpage"
+                            href="https://www.facebook.com/arteaseFB"
                             target="_blank"
                             underline="none"
                         >
@@ -43,7 +43,7 @@ const Footer = () => {
                     <div className={classes.footerColumn}>
                         {' '}
                         <Link
-                            href="https://www.instagram.com/yourinstagrampage"
+                            href="https://www.instagram.com/ARTease"
                             target="_blank"
                             underline="none"
                         >
@@ -52,11 +52,11 @@ const Footer = () => {
                     </div>
                     <div id="num" className={classes.footerColumn}>
                         {' '}
-                        Phone: +216 (123) 456-7890{' '}
+                        Phone: +216 53342432{' '}
                     </div>
                     <div className={classes.footerColumn}>
                         {' '}
-                        Address: 1234 Main St, hammamet TUNISIA
+                        Address: 8080 avenue la liberation , hammamet TUNISIA
                     </div>
                 </Typography>
             </div>

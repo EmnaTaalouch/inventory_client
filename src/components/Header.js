@@ -19,6 +19,8 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from 'src/hooks/useAuth';
+import ArtEase from '../assets/images/logos/ArtEase.png';
+
 function ElevationScroll(props) {
     const { children, window } = props;
     // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -91,11 +93,15 @@ const Header = (props) => {
             <ElevationScroll {...props}>
                 <AppBar>
                     <Toolbar className={classes.toolBar}>
-                        <Link href="/" underline="none">
-                            <Typography variant="h5" className={classes.logo}>
-                                e-commerce
-                            </Typography>
-                        </Link>
+                        <Toolbar className={classes.toolBar}>
+                            <Link href="/" underline="none">
+                                <img
+                                    src={ArtEase}
+                                    alt="ArtEase"
+                                    style={{ width: '200px', height: 'auto' }}
+                                />
+                            </Link>
+                        </Toolbar>
 
                         {matches ? (
                             <Box>
