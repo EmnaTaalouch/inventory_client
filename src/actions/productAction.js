@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-    baseURL: 'http://localhost:3000/products',
+    baseURL: 'http://localhost:5000/products',
     responseType: 'json',
 });
 
@@ -23,6 +23,10 @@ export const ProductApi = {
 
     async updateProduct(productId, updateProductDto) {
         const { data } = await api.put(`/${productId}`, updateProductDto);
+        return data;
+    },
+    async uploadImage(formData) {
+        const { data } = await api.post(`/upload_product_image`, formData);
         return data;
     },
 

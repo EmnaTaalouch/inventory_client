@@ -30,7 +30,7 @@ import MonthlyEarnings from '../dashboard/components/MonthlyEarnings';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 // Define your API base URL
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:5000';
 
 const InvoiceList = () => {
     const [invoices, setInvoices] = useState([]);

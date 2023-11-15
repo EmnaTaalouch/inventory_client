@@ -20,6 +20,23 @@ import PageContainer from 'src/components/container/PageContainer';
 import Logo from 'src/layouts/full/shared/logo/Logo';
 import { getProductById, updateProductAsync } from '../../redux/slices/productSlice';
 import { fetchOrders } from 'src/redux/slices/orderSlice';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { ProductApi } from 'src/actions/productAction';
+
+const SUPPORTED_FORMATS = ['image/jpeg', 'image/png', 'image/gif'];
+const FILE_SIZE = 1024 * 1024; // 1 MB
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 const Container = styled(Box)(({ theme }) => ({
     position: 'relative',
@@ -66,15 +83,23 @@ function FormEditProduct() {
     console.log(productId);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const [uploadedImage, setUploadedImage] = useState(null);
     const { selectedProduct, products } = useSelector((state) => state.product);
     // Initialize state for form fields
+
+    const handleImageChange = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setUploadedImage(file);
+        }
+    };
     const [formData, setFormData] = useState({
         productName: '',
         productPrice: 0,
         productQuantity: 0,
         productDescription: '',
         isAvailable: false,
+        image: ''
     });
     console.log(selectedProduct);
     console.log(formData);
@@ -87,6 +112,7 @@ function FormEditProduct() {
             productQuantity: p?.quantity,
             productDescription: p?.description,
             isAvailable: p?.isAvailable,
+            image: p?.image,
         });
     }, [dispatch]);
 
@@ -94,7 +120,7 @@ function FormEditProduct() {
         navigate('/product/list');
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         // Create an updated product object with the form data
         const updatedProduct = {
@@ -104,7 +130,14 @@ function FormEditProduct() {
             quantity: formData.productQuantity,
             description: formData.productDescription,
             isAvailable: formData.isAvailable,
+            image: formData.image,
         };
+        if (uploadedImage) {
+            const formData = new FormData();
+            formData.append('file', uploadedImage);
+            const response = await ProductApi.uploadImage(formData);
+            updatedProduct.image = response.data;
+        }
         // Dispatch the updateProductAsync action
         dispatch(updateProductAsync(productId, updatedProduct));
         navigate('/product/list');
@@ -198,6 +231,24 @@ function FormEditProduct() {
                                         />
                                     }
                                     label="Disponible"
+                                    labelPlacement="start"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Button
+                                            component="label"
+                                            variant="contained"
+                                            startIcon={<CloudUploadIcon />}
+                                        >
+                                            Upload file
+                                            <VisuallyHiddenInput
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageChange}
+                                            />
+                                        </Button>
+                                    }
+                                    label={<>Image: &nbsp;</>}
                                     labelPlacement="start"
                                 />
                                 <SubmitButtonContainer>

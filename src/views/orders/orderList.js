@@ -31,6 +31,7 @@ import { Link } from 'react-router-dom';
 import { fetchOrders, removeOrderAsync, updateOrderAsync } from '../../redux/slices/orderSlice';
 
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 const ITEM_HEIGHT = 48;
 
 function OrderList() {
@@ -68,13 +69,19 @@ function OrderList() {
     const handleClose = () => {
         setOpen(false);
     };
+    const API_BASE_URL = 'http://localhost:5000/invoice';
 
-    const handleConfirmOrder = async (id) => {
-        console.log(id);
+    const handleConfirmOrder = async (order) => {
+        console.log(order);
 
-        if (id) {
+        if (order.orderid) {
             // Dispatch the action to update the order status to 'Paid'
-            dispatch(updateOrderAsync(id, { status: 'Paid' }));
+            const res = await axios.post(`${API_BASE_URL}`, {
+                totalAmount: order.total,
+                user: order.user,
+                products: order.products,
+            });
+            dispatch(updateOrderAsync(order.orderid, { status: 'Paid' }));
             handleClose();
         }
     };
@@ -208,7 +215,7 @@ function OrderList() {
                                                 variant="contained"
                                                 color="primary"
                                                 style={{ backgroundColor: '#8BD464' }}
-                                                onClick={() => handleConfirmOrder(order.orderid)} // Call handleConfirmOrder with the order ID
+                                                onClick={() => handleConfirmOrder(order)} // Call handleConfirmOrder with the order ID
                                             >
                                                 Confirmer
                                             </Button>

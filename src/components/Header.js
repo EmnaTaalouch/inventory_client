@@ -94,13 +94,13 @@ const Header = (props) => {
                 <AppBar>
                     <Toolbar className={classes.toolBar}>
                         <Toolbar className={classes.toolBar}>
-                            <Link href="/" underline="none">
+                            <a href="/" underline="none">
                                 <img
                                     src={ArtEase}
                                     alt="ArtEase"
                                     style={{ width: '200px', height: 'auto' }}
                                 />
-                            </Link>
+                            </a>
                         </Toolbar>
 
                         {matches ? (

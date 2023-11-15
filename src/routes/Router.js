@@ -11,6 +11,7 @@ import UserProfile from 'src/views/users/UserProfile';
 import About from 'src/views/home/About';
 import GuestGuard from 'src/guards/GuestGuard';
 import AuthGuard from 'src/guards/AuthGuard';
+import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 
 ///import Checkout from 'src/views/home/checkout/Checkout';
 
@@ -46,7 +47,9 @@ const Router = [
         path: 'dashboard',
         element: (
             <AuthGuard>
-                <FullLayout />
+                <RoleBasedGuard accessibleRoles={['admin']}>
+                    <FullLayout />
+                </RoleBasedGuard>
             </AuthGuard>
         ),
         children: [

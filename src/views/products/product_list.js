@@ -251,7 +251,7 @@ const ProductList = () => {
                                                 >
                                                     {option === 'Edit' ? (
                                                         <Link
-                                                            to={`/product/edit/${selectedProductId}`}
+                                                            to={`/dashboard/product/edit/${selectedProductId}`}
                                                         >
                                                             Modifier
                                                         </Link>
@@ -275,7 +275,12 @@ const ProductList = () => {
             </DashboardCard>
             <div style={{ marginBottom: '16px' }}></div>
             <div style={{ textAlign: 'right' }}>
-                <Button variant="contained" color="primary" component={Link} to="/product/add">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    component={Link}
+                    to="/dashboard/product/add"
+                >
                     Ajouter un produit
                 </Button>
             </div>

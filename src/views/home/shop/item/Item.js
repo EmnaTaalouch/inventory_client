@@ -12,7 +12,7 @@ const Item = ({ product, handleAddToCart }) => {
                 <BlankCard style={{ width: '80%', height: '50%', padding: '20px' }}>
                     <Typography component={Link} to="/">
                         <img
-                            src={product.image}
+                            src={`http://localhost:5000/products/product_image/${product.image}`}
                             alt={product.name}
                             style={{
                                 maxWidth: '100%',

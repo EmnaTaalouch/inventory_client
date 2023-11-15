@@ -30,7 +30,10 @@ const CartItem = ({ product, addToCart, removeFromCart }) => {
                     </Button>
                 </div>
             </div>
-            <img src={product.image} alt={product.name} />
+            <img
+                src={`http://localhost:5000/products/product_image/${product.image}`}
+                alt={product.name}
+            />
         </Wrapper>
     );
 };

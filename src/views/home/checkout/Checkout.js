@@ -16,6 +16,8 @@ import PaymentForm from './PaymentForm';
 import Review from './Review';
 import { getCartSession } from 'src/utils/sessionStorage';
 import { addOrderAsync } from '../../../redux/slices/orderSlice';
+import useAuth from 'src/hooks/useAuth';
+import axios from 'axios';
 function Copyright() {
     return (
         <Typography variant="body2" color="text.secondary" align="center">
@@ -43,19 +45,30 @@ function getStepContent(step) {
             throw new Error('Unknown step');
     }
 }
+const API_BASE_URL = 'http://localhost:5000/orders';
 
 export default function Checkout() {
     const [activeStep, setActiveStep] = React.useState(0);
+    const { user } = useAuth();
+    const products = getCartSession();
 
-    const handleNext = () => {
+    const handleNext = async () => {
         setActiveStep(activeStep + 1);
+        if (activeStep == 2) {
+            console.log(user);
+            const res = await axios.post(API_BASE_URL, {
+                user,
+                products,
+                total:
+                    products.reduce((a, b) => a + parseInt(b.price) * parseInt(b.quantity), 0) + 7,
+            });
+        }
     };
 
     const handleBack = () => {
         setActiveStep(activeStep - 1);
     };
 
-    console.log(getCartSession());
     return (
         <React.Fragment>
             <CssBaseline />

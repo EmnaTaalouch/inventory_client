@@ -10,6 +10,7 @@ import {
     Button,
     FormControlLabel,
     Switch,
+    Stack,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { styled } from '@mui/system';
@@ -19,6 +20,23 @@ import * as Yup from 'yup';
 import PageContainer from 'src/components/container/PageContainer';
 import Logo from 'src/layouts/full/shared/logo/Logo';
 import { addProductAsync } from '../../redux/slices/productSlice';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { ProductApi } from 'src/actions/productAction';
+
+const SUPPORTED_FORMATS = ['image/jpeg', 'image/png', 'image/gif'];
+const FILE_SIZE = 1024 * 1024; // 1 MB
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 const Container = styled(Box)(({ theme }) => ({
     position: 'relative',
@@ -63,13 +81,33 @@ const SubmitButtonContainer = styled('div')(({ theme }) => ({
 function FormProduct() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    const [uploadedImage, setUploadedImage] = useState(null);
     const validationSchema = Yup.object({
         name: Yup.string().required('Name is required'),
         price: Yup.number().required('Price is required'),
         quantity: Yup.number().required('Quantity is required'),
         description: Yup.string().required('Description is required'),
+        image: Yup.mixed()
+            .nullable()
+            .notRequired()
+            .test(
+                'FILE_SIZE',
+                'Uploaded image is too big.',
+                (value) => !value || (value && value.size <= FILE_SIZE),
+            )
+            .test(
+                'FILE_FORMAT',
+                'Uploaded image has unsupported format.',
+                (value) => !value || (value && SUPPORTED_FORMATS.includes(value.type)),
+            ),
     });
+
+    const handleImageChange = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setUploadedImage(file);
+        }
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -78,12 +116,19 @@ function FormProduct() {
             quantity: 0,
             description: '',
             isAvailable: false,
+            image: '',
         },
         validationSchema,
         onSubmit: async (values) => {
             try {
-                await dispatch(addProductAsync(values));
-                navigate('/product/list');
+                if (uploadedImage) {
+                    const formData = new FormData();
+                    formData.append('file', uploadedImage);
+                    const response = await ProductApi.uploadImage(formData);
+                    values.image = response.data;
+                }
+                await dispatch(addProductAsync({ ...values }));
+                navigate('/dashboard/product/list');
             } catch (error) {
                 console.error('Error adding product:', error);
             }
@@ -91,7 +136,7 @@ function FormProduct() {
     });
 
     const handleReturnToList = () => {
-        navigate('/product/list');
+        navigate('/dashboard/product/list');
     };
 
     return (
@@ -179,6 +224,7 @@ function FormProduct() {
                                         formik.touched.description && formik.errors.description
                                     }
                                 />
+
                                 <FormControlLabel
                                     control={
                                         <Switch
@@ -190,6 +236,26 @@ function FormProduct() {
                                     label="Disponible"
                                     labelPlacement="start"
                                 />
+                                <br />
+                                <FormControlLabel
+                                    control={
+                                        <Button
+                                            component="label"
+                                            variant="contained"
+                                            startIcon={<CloudUploadIcon />}
+                                        >
+                                            Upload file
+                                            <VisuallyHiddenInput
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageChange}
+                                            />
+                                        </Button>
+                                    }
+                                    label={<>Image: &nbsp;</>}
+                                    labelPlacement="start"
+                                />
+
                                 <SubmitButtonContainer>
                                     <Button type="submit" variant="contained" color="primary">
                                         Ajouter
